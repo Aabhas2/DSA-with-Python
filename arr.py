@@ -19,6 +19,20 @@ class MyList:
             result = result + str(self.A[i]) + ','
 
         return '[' + result[:-1] + ']'
+    
+    def __getitem__(self,index):
+        if 0 <= index < self.n:
+            return self.A[index]
+        else:
+            return 'IndexError - Index out of range'
+
+    def __delitem__(self,pos):
+        if 0<= pos < self.n:
+            for i in range(pos,self.n-1):
+                self.A[i] = self.A[i+1]
+
+            self.n -= 1
+            
 
     def append(self,item):
         if self.n == self.size: 
@@ -27,6 +41,43 @@ class MyList:
         # append 
         self.A[self.n] = item
         self.n += 1
+
+    def pop(self):
+        if self.n == 0:
+            return 'Empty list'
+        
+        print(self.A[self.n-1])
+        self.n -= 1
+
+    def clear(self):
+        self.n = 0
+        self.size = 1
+
+    def find(self,key):
+        for i in range(self.n):
+            if self.A[i] == key:
+                return i
+            
+        return 'ValueError - not found in list'
+
+    def insert(self,pos,item):
+        if self.n == self.size:
+            self.__resize(self.size*2)
+
+        for i in range(self.n,pos,-1):
+            self.A[i] = self.A[i-1]
+
+        self.A[pos] = item 
+        self.n += 1
+
+    def remove(self,item):
+        pos = self.find(item)
+        if type(pos) == int:
+            # delete 
+            self.__delitem__(pos)
+
+        else: 
+            return pos
 
     def __resize(self,new_capacity):
         # create a new array with new capacity 
@@ -47,4 +98,8 @@ L.append('hello')
 L.append(3.4)
 L.append(True)
 L.append(100)
+print(L)
+L.insert(0,0)
+print(L)
+L.insert(2,234050105)
 print(L)
