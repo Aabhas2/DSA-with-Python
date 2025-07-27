@@ -21,18 +21,69 @@ class MyList:
         return '[' + result[:-1] + ']'
     
     def __getitem__(self,index):
-        if 0 <= index < self.n:
-            return self.A[index]
+        if isinstance(index, int):
+            if index < 0:
+                index = self.n + index 
+            if 0 <= index < self.n:
+                return self.A[index]
+            else:
+                raise IndexError("Index out of range")
+            
+        elif isinstance(index, slice):
+            return self._handle_slice(index)
         else:
-            return 'IndexError - Index out of range'
+            raise TypeError("List indexes must be integers or slices, not" + type(index).__name__)
 
     def __delitem__(self,pos):
-        if 0<= pos < self.n:
-            for i in range(pos,self.n-1):
-                self.A[i] = self.A[i+1]
+        if pos < 0:
+            pos = self.n + pos 
 
+        if 0 <= pos < self.n: 
+            for i in range(pos,self.n - 1):
+                self.A[i] = self.A[i+1]
             self.n -= 1
+        else:
+            raise IndexError("Index out of range for deletion")
             
+    def sort(self):
+        if self.n <= 1:
+            return 
+        
+        for i in range(self.n - 1):
+            min_index = i
+            for j in range(i+1,self.n):
+                if self.A[j] < self.A[min_index]:
+                    min_index = j 
+            self.A[i], self.A[min_index] = self.A[min_index], self.A[i]
+
+    def min(self):
+        if self.n == 0:
+            raise ValueError("min() arg is an empty sequence.")
+        min_val = self.A[0]
+        for i in range(1,self.n):
+            if self.A[i] < min_val:
+                min_val = self.A[i]
+
+        return min_val
+    
+    def max(self):
+        if self.n == 0:
+            raise ValueError("max() arg is an empty sequence.")
+        max_val = self.A[0]
+        for i in range(1,self.n):
+            if self.A[i] > max_val:
+                max_val = self.A[i]
+
+        return max_val
+    
+    def sum(self):
+        if self.n == 0:
+            raise ValueError("List is empty.")
+        total = 0 
+        for i in range(self.n):
+            total += self.A[i]
+
+        return total
 
     def append(self,item):
         if self.n == self.size: 
@@ -41,6 +92,10 @@ class MyList:
         # append 
         self.A[self.n] = item
         self.n += 1
+
+    def extend(self,item):
+        for i in item: 
+            self.append(i)
 
     def pop(self):
         if self.n == 0:
@@ -94,12 +149,17 @@ class MyList:
         return (capacity*ctypes.py_object)()
     
 L = MyList()
-L.append('hello')
 L.append(3.4)
-L.append(True)
 L.append(100)
+L.append(1)
+L.append(23)
+L.append(7)
 print(L)
-L.insert(0,0)
+L.sort()
 print(L)
-L.insert(2,234050105)
+print(L.max())
+print(L.min())
+print("SUM: ",L.sum())
+P = ('2,3,4,5,6','hellooo')
+L.extend(P)
 print(L)
