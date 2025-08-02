@@ -103,6 +103,14 @@ class Dictionary:
 
         self.buckets[bucket_index].remove(key)
 
+    def __str__(self):
+        for i in self.buckets:
+            i.traverse()
+        return ""
+
+    def __len__(self):
+        return self.size
+
     def __getitem__(self,key):
         return self.get(key)
 
